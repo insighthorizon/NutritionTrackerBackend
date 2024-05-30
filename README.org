@@ -1,0 +1,2 @@
+
+REST API backend in Spring boot, based on JSON for client/server data exchange
