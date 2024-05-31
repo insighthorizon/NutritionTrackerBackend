@@ -9,9 +9,134 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+<!--        specify versions-->
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <org.hibernate.orm.version>6.5.2.Final</org.hibernate.orm.version>
+        <org.projectlombok.version>1.18.32</org.projectlombok.version>
     </properties>
+
+    <parent> <!-- parent helps to specify spring boot version - so that we don't have to do it in every spring boot component -->
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+
+    <dependencies>
+        <!-- database driver (mariadb) -->
+        <!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <!-- swagger: for viewing and testing API endpints -->
+        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+
+        <!-- spring boot: base framework, JPA - handling db entities (persistence via database), validation of client input -->
+        <!-- version inherited from the parent -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+<!--        validation of data provided by the client-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+<!--        authentication and authorization -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- mapstruct for generation of mappers for conversion between entities and DOTs -->
+        <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version> <!-- quoting the version from properties -->
+        </dependency>
+
+        <!-- Hibernate JPA Metamodel Generator -->
+        <!-- automates static metamodel class generation for two JPA entities with mutual relations
+        - for writing typesafe queries -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-jpamodelgen -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>${org.hibernate.orm.version}</version>
+        </dependency>
+
+        <!-- lobok for generating getters and setters - not having to generate them with IDE anymore,
+        our source files will have less boilerplate -->
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${org.projectlombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- some dependencies require running scripts at project compilation - build plugins -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source> <!-- quoting the version from properties -->
+                    <target>${maven.compiler.target}</target> <!-- quoting the version from properties -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <!-- https://projectlombok.org/setup/maven -->
+                            <!--                            https://ioflood.com/blog/lombok-maven/-->
+                            <!-- https://kotlinlang.org/docs/lombok.html#maven -->
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${org.projectlombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>${org.hibernate.orm.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version> <!-- quoting the version from properties -->
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-Amapstruct.suppressGeneratorTimestamp=true</arg> <!-- https://mapstruct.org/documentation/stable/reference/html/ -->
+                        <arg>-Amapstruct.defaultComponentModel=spring</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/ -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 
 </project>

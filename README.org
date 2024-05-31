@@ -1,2 +1,33 @@
-
+* Brief description
 REST API backend in Spring boot, based on JSON for client/server data exchange
+
+* Database design
+
+User
+| id | email | password_hash |
+|----+-------+---------------|
+|    |       |               |
+
+Unit
+| id | name | is_weight | to_basic_unit_ratio |
+|----+------+-----------+---------------------|
+|    |      |           |                     |
+
+# is_weight - if true, it's weight unit, if false, it's volume unit
+# basic units are grams (for weight) and mililiters (for volume) respectively
+# to_basic_unit_ratio - ratio of the given unit to the basic unit (g or ml)
+
+Food
+| id | name | kcal_per_u | prot_per_u | carb_per_u | fat_per_u | fiber_per_u | *unit* | volume_to_weight_ratio |
+|----+------+------------+------------+------------+-----------+-------------+------+------------------------|
+|    |      |            |            |            |           |             |      |                        |
+
+Meal
+| id | *user_id* | date_time |
+|----+---------+-----------|
+|    |         |           |
+
+Meal ingredient
+| id | *meal_id* | *food_id* | *unit* | quantity |
+|----+---------+---------+------+----------|
+|    |         |         |      |          |
