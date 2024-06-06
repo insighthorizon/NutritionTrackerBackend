@@ -4,9 +4,10 @@ REST API backend in Spring boot, based on JSON for client/server data exchange
 * Database design
 
 User
-| id | email | password_hash |
-|----+-------+---------------|
-|    |       |               |
+| id | email | password | admin |
+|----+-------+----------+-------|
+|    |       |          |       |
+
 
 Unit
 | id | name | is_weight | to_basic_unit_ratio |
